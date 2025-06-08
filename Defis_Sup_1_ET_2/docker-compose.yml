@@ -1,0 +1,142 @@
+  version: '3.8'
+
+  services:
+    # Base de données MariaDB
+    db:
+
+      image: mariadb:10.9
+      environment:
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        MYSQL_DATABASE: ${MYSQL_DATABASE}
+        MYSQL_USER: ${MYSQL_USER}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+      container_name: wordpress_db
+      restart: unless-stopped
+      volumes:
+        - ./volumes/mariadb:/var/lib/mysql
+        - ./mariadb/init.sql:/docker-entrypoint-initdb.d/init.sql
+      networks:
+        - wordpress_network
+      mem_limit: 512m
+      cpus: 0.5
+    # Cache Redis
+    redis:
+      image: redis:7-alpine
+      container_name: wordpress_redis
+      restart: unless-stopped
+      command: redis-server --appendonly yes
+      volumes:
+        - ./volumes/redis:/data
+      networks:
+        - wordpress_network
+
+    # WordPress
+    wordpress:
+      build: ./wordpress
+      container_name: wordpress_app
+      restart: unless-stopped
+      environment:
+        WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
+        WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
+        WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
+        WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+      volumes:
+        - ./volumes/wordpress:/var/www/html
+      depends_on:
+        - db
+        - redis
+      networks:
+        - wordpress_network
+
+    # phpMyAdmin (optionnel)
+    phpmyadmin:
+      image: phpmyadmin/phpmyadmin
+      container_name: wordpress_phpmyadmin
+      restart: unless-stopped
+      ports:
+        - "8081:80"
+      environment:
+        PMA_HOST: db
+        PMA_PORT: 3306
+        MYSQL_ROOT_PASSWORD: root_password
+      depends_on:
+        - db
+      networks:
+        - wordpress_network
+
+    nginx:
+      image: nginx:alpine
+      container_name: wordpress_nginx
+      restart: unless-stopped
+      ports:
+        - "80:80"
+      volumes:
+        - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      depends_on:
+        - wordpress
+      networks:
+        - wordpress_network
+    cadvisor:
+      image: gcr.io/cadvisor/cadvisor:latest
+      container_name: wordpress_cadvisor
+      restart: unless-stopped
+      ports:
+        - "8080:8080"
+      volumes:
+        - /:/rootfs:ro
+        - /var/run:/var/run:ro
+        - /sys:/sys:ro
+        - /var/lib/docker/:/var/lib/docker:ro
+        - /dev/disk/:/dev/disk:ro
+      privileged: true
+      networks:
+        - wordpress_network
+
+    node-exporter:
+      image: prom/node-exporter:latest
+      container_name: wordpress_node_exporter
+      restart: unless-stopped
+      ports:
+        - "9100:9100"
+      networks:
+        - wordpress_network
+
+    prometheus:
+      image: prom/prometheus:latest
+      container_name: wordpress_prometheus
+      restart: unless-stopped
+      ports:
+        - "9090:9090"
+      volumes:
+        - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+        - ./volumes/prometheus:/prometheus
+      command:
+        - '--config.file=/etc/prometheus/prometheus.yml'
+        - '--storage.tsdb.path=/prometheus'
+      networks:
+        - wordpress_network
+    grafana:
+      image: grafana/grafana:latest
+      container_name: wordpress_grafana
+      restart: unless-stopped
+      ports:
+        - "3000:3000"
+      environment:
+        - GF_SECURITY_ADMIN_PASSWORD=admin
+      volumes:
+        - ./volumes/grafana:/var/lib/grafana
+      depends_on:
+        - prometheus
+      networks:
+        - wordpress_network
+
+  networks:
+    wordpress_network:
+      driver: bridge
+
+  volumes:
+    wordpress_data:
+    mariadb_data:
+    redis_data:
+
