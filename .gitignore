@@ -1,25 +1,64 @@
-# CakePHP 3
+# Ignorer les fichiers système
+.DS_Store
+Thumbs.db
 
-/vendor/*
-/config/app.php
+# Ignorer les logs et fichiers temporaires
+*.log
+*.tmp
+*.swp
+*.bak
 
-/tmp/cache/models/*
-!/tmp/cache/models/empty
-/tmp/cache/persistent/*
-!/tmp/cache/persistent/empty
-/tmp/cache/views/*
-!/tmp/cache/views/empty
-/tmp/sessions/*
-!/tmp/sessions/empty
-/tmp/tests/*
-!/tmp/tests/empty
+# Ignorer les dossiers cache de PHP
+cache/
+tmp/
+*.cache
 
-/logs/*
-!/logs/empty
+# Ignorer les fichiers liés à Composer (si utilisé)
+vendor/
+composer.lock
 
-# CakePHP 2
+# Ignorer les fichiers environnement
+.env
+.env.local
+.env.*.local
 
-/app/tmp/*
-/app/Config/core.php
-/app/Config/database.php
-/vendors/*
+# Ignorer les volumes et dossiers persistants liés à WordPress
+wp-content/uploads/
+wp-content/cache/
+wp-content/backups/
+wp-content/upgrade/
+
+# Ignorer les fichiers spécifiques à WordPress
+wp-config.php
+wp-config-local.php
+
+# Ignorer les dossiers Docker
+docker-compose.override.yml
+*.pid
+
+# Ignorer les images et volumes Docker générés
+*.tar
+*.img
+
+# NodeJS (si utilisé pour front ou outils de build)
+node_modules/
+npm-debug.log
+yarn.lock
+pnpm-lock.yaml
+
+# JetBrains IDEs (PhpStorm, WebStorm, etc.)
+.idea/
+
+# VS Code
+.vscode/
+
+# Autres dossiers IDE ou OS
+*.sublime*
+*.bak
+*.orig
+*.rej
+
+# Ignorer les fichiers SQL dump
+*.sql
+*.sql.gz
+*.sql.zip
