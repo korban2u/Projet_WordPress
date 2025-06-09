@@ -100,7 +100,7 @@ docker-compose exec wordpress redis-cli -h redis ping
 docker-compose exec db mysqldump -u root -p wordpress_db > backup.sql
 
 # Restaurer la base de données
-docker-compose exec -T db mysql -u root -p wordpress_db < backup.sql
+docker-compose exec -T db mysql -u root -proot_password wordpress_db < backup.sql
 ```
 
 ### Monitoring
