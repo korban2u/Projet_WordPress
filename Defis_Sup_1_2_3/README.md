@@ -18,15 +18,22 @@ Stack WordPress avec :
 
 ### 1. Créer le fichier `.env`
 ```env
+# Base de données
 MYSQL_ROOT_PASSWORD=root_password
 MYSQL_DATABASE=wordpress_db
 MYSQL_USER=wp_user
 MYSQL_PASSWORD=wp_password
 
+# WordPress
 WORDPRESS_DB_HOST=db:3306
 WORDPRESS_DB_NAME=wordpress_db
 WORDPRESS_DB_USER=wp_user
 WORDPRESS_DB_PASSWORD=wp_password
+
+# Ports
+WORDPRESS_PORT=8080
+PHPMYADMIN_PORT=8081 
+
 ```
 
 ### 2. Lancer
@@ -80,7 +87,7 @@ for i in {1..10}; do curl http://localhost; done
 1. Aller sur http://localhost:3000
 2. Se connecter avec admin/admin
 3. Ajouter Prometheus comme data source : `http://prometheus:9090`
-4. Importer un dashboard (ex: ID 893 pour Docker monitoring)
+4. Importer un dashboard (ex: ID 1860 pour Docker monitoring)
 
 ## Commandes utiles
 
