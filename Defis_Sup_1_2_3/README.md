@@ -52,6 +52,42 @@ docker-compose up -d
 | **cAdvisor** | http://localhost:8083 | - | Monitoring conteneurs |
 | **Node Exporter** | http://localhost:9100/metrics | - | Métriques système |
 
+## Problème possible (que j'ai eu)
+
+### Problème : Grafana et Prometheus ne démarrent pas
+
+**Symptômes :**
+- Grafana affiche dans les log : `GF_PATHS_DATA='/var/lib/grafana' is not writable`
+- Prometheus affiche dans les log : `permission denied` sur `/prometheus/queries.active`
+- Les conteneurs sont en état "Restarting" dans `docker-compose ps`
+
+**Cause :**
+Les conteneurs Grafana et Prometheus s'exécutent avec des utilisateurs non-root spécifiques qui nécessitent les bonnes permissions sur leurs volumes :
+- Grafana utilise l'UID 472
+- Prometheus utilise l'UID 65534 (nobody)
+
+**Solution :**
+
+```bash
+# 1. Arrêter tous les conteneurs
+docker-compose down
+
+# 2. Supprimer les volumes existants
+sudo rm -rf ./volumes/grafana
+sudo rm -rf ./volumes/prometheus
+
+# 3. Créer les dossiers avec les bonnes permissions
+# Pour Grafana (UID 472)
+mkdir -p ./volumes/grafana
+sudo chown -R 472:472 ./volumes/grafana
+
+# Pour Prometheus (UID 65534)
+mkdir -p ./volumes/prometheus
+sudo chown -R 65534:65534 ./volumes/prometheus
+
+# 4. Redémarrer les services
+docker-compose up -d
+```
 
 ## Défis implémentés
 
