@@ -32,9 +32,9 @@
         - wordpress_network
 
     # WordPress
-    wordpress:
+    wordpress1:
       build: ./wordpress
-      container_name: wordpress_app
+      container_name: wordpress_app1
       restart: unless-stopped
       environment:
         WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
@@ -49,6 +49,25 @@
       networks:
         - wordpress_network
 
+
+    wordpress2:
+      build: ./wordpress
+      container_name: wordpress_app2
+      restart: unless-stopped
+      environment:
+        WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
+        WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
+        WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
+        WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+      volumes:
+        - ./volumes/wordpress:/var/www/html
+      depends_on:
+        - db
+        - redis
+      networks:
+        - wordpress_network
+
+        
     # phpMyAdmin (optionnel)
     phpmyadmin:
       image: phpmyadmin/phpmyadmin
@@ -74,15 +93,19 @@
       volumes:
         - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       depends_on:
-        - wordpress
+        - wordpress1
+        - wordpress2
+        
       networks:
         - wordpress_network
+
+
     cadvisor:
       image: gcr.io/cadvisor/cadvisor:latest
       container_name: wordpress_cadvisor
       restart: unless-stopped
       ports:
-        - "8080:8080"
+        - "8082:8080"
       volumes:
         - /:/rootfs:ro
         - /var/run:/var/run:ro
