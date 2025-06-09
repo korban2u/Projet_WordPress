@@ -87,7 +87,7 @@ for i in {1..10}; do curl http://localhost; done
 1. Aller sur http://localhost:3000
 2. Se connecter avec admin/admin
 3. Ajouter Prometheus comme data source : `http://prometheus:9090`
-4. Importer un dashboard (ex: ID 893 pour Docker monitoring)
+4. Importer un dashboard (ex: ID 1860 pour Docker monitoring)
 
 ## Commandes utiles
 
