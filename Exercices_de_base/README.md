@@ -17,13 +17,7 @@ Ce projet déploie une stack WordPress en utilisant Docker Compose avec les serv
 
 ## Installation et déploiement
 
-### 1. Cloner et préparer l'environnement
-
-```bash
-cd Exercices_de_base/
-```
-
-### 2. Configurer les variables d'environnement
+### 1. Configurer les variables d'environnement
 
 Créez un fichier `.env` avec les variables suivantes :
 
@@ -42,7 +36,7 @@ WORDPRESS_DB_PASSWORD=votre_mot_de_passe_wp
 WORDPRESS_PORT=8080
 ```
 
-### 3. Lancer la stack
+### 2. Lancer la stack
 
 ```bash
 # Construire et démarrer tous les services
@@ -55,7 +49,7 @@ docker-compose ps
 docker-compose logs
 ```
 
-### 4. Arrêter la stack
+### 3. Arrêter la stack
 
 ```bash
 # Arrêter les services
