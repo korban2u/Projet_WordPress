@@ -15,21 +15,6 @@ Ce projet déploie une stack WordPress en utilisant Docker Compose avec les serv
 - Docker Compose >= 2.0
 - Ports disponibles : 8080, 8081
 
-## Structure du projet
-
-```
-Exercices_de_base/
-├── docker-compose.yml          # Configuration des services
-├── wordpress/
-│   ├── Dockerfile             # Image WordPress personnalisée
-│   └── php.ini               # Configuration PHP
-├── volumes/                  # Données persistantes
-│   ├── wordpress/
-│   ├── mariadb/
-│   └── redis/
-└── .env                     # Variables d'environnement
-```
-
 ## Installation et déploiement
 
 ### 1. Cloner et préparer l'environnement
